@@ -1,0 +1,69 @@
+public with sharing class QuestionTriggerController {
+
+    List<Question__c> recordNewList = new List<Question__c>();
+    List<Question__c> recordOldList = new List<Question__c>();
+    Map<Id, Question__c> recordNewMap = new Map<Id, Question__c>();
+    Map<Id, Question__c> recordOldMap = new Map<Id, Question__c>();
+    Boolean isInsert, isUpdate, isDelete, isUndelete = false;
+    public static boolean recursionController = false;
+    
+    public QuestionTriggerController(List<Question__c> newList, List<Question__c> oldList, Map<Id, Question__c> newMap, Map<Id, Question__c> oldMap, boolean isInsert, boolean isUpdate, Boolean isDelete, Boolean isUndelete) {
+        this.recordNewList = newList;
+        this.recordOldList = oldList;
+        this.recordNewMap = newMap;
+        this.recordOldMap = oldMap;
+        this.isInsert = isInsert;
+        this.isUpdate = isUpdate;
+        this.isDelete = isDelete;
+        this.isUndelete = isUndelete;
+    }
+    
+    public void BeforeInsertEvent(){}
+    
+    public void BeforeUpdateEvent(){}
+    
+    public void BeforeDeleteEvent(){}
+    
+    public void AfterInsertEvent(){
+        rollup();
+    }
+    
+    public void AfterUpdateEvent(){
+        rollup();
+    }
+    
+    public void AfterDeleteEvent(){
+        rollup();
+    }
+    
+    public void AfterUndeleteEvent(){
+        rollup();
+    }
+
+    public void rollup(){
+        Set<Id> sectionIdSet = new Set<Id>();
+        
+        // Here, isDelete = trigger.isDelete, recordOldList = trigger.old and recordNewList = trigger.new
+        for(Question__c q : isDelete ? recordOldList : recordNewList ){
+            sectionIdSet.add(q.Section__c);
+        }
+        
+        // Fetching the Account List to update.
+        List<Section__c> sectionList = new List<Section__c>();
+        sectionList = [ SELECT Id FROM Section__c WHERE Id =: sectionIdSet ];
+
+        if(sectionList.size() > 0 ){
+        
+            // Querying all the contact related to account, grouped by each Account, So here we will get Account Id and Sum from the related contact
+            // We are using Aggregate Query, So no need to use any variable to hold the total amount.
+            Map<Id, AggregateResult> accAggrigateMap = new Map<Id, AggregateResult>([ SELECT Count(Id) countRecord, Section__c Id 
+                                                                                        FROM Question__c 
+                                                                                    WHERE Section__c =: sectionIdSet 
+                                                                                    GROUP BY Section__c ]);
+            for(Section__c sec : sectionList ){
+                sec.Number_of_Questions__c = ( (Decimal) accAggrigateMap.get(sec.Id).get('countRecord') );
+            }
+            update sectionList;
+        }
+    }
+}
