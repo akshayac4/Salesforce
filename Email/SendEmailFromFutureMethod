@@ -1,0 +1,60 @@
+public with sharing class ClassTriggerHandler { 
+    
+    /* Use this method to pass the object name and send emails to the clients*/
+
+    @Future(callout=true)
+    public static void EmailForInstructor(List<Id> ClassIdList){
+
+        List<Class__c> ClassList = new List<Class__c>();
+        ClassList = [ SELECT Id, Instructor_Trainer__c, Instructor_Trainer__r.Email, Interpreter__c, Interpreter__r.Name, Interpreter__r.MobilePhone,
+                             Instructor_Trainer__r.FirstName, Course_Id__c, Course_Id__r.Course_Name__c
+                        FROM Class__c 
+                       WHERE Id =: ClassIdList ];
+        
+
+        // List of email to be sent
+        List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
+
+        for(Class__c classId : ClassList){
+            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+
+            // Step 2: Set list of people who should get the email
+            List<String> sendTo = new List<String>();
+            sendTo.add(classId.Instructor_Trainer__r.Email);
+            
+            mail.setToAddresses(sendTo);
+
+            // Step 3: Set who the email is sent from
+            mail.setSenderDisplayName('InterAktiv');
+
+
+            // Step 4. Set email contents - you can use variables!
+            mail.setSubject('DCCL + SgSL Level One Class '+ classId.Course_Id__r.Course_Name__c +' Via Online Confirmation!');
+            String body = 'Hi ' + classId.Instructor_Trainer__r.FirstName + ', <br/><br/>';
+            body += 'For your information below only, thank you.<br/>';
+            body += 'Attached is your class attendance list with names and email addresses.<br/><br/>';
+            body += 'Your interpreter is '+ classId.Interpreter__r.Name +' and theirs contact number is '+ classId.Interpreter__r.MobilePhone +' in case you may need it.<br/><br/>';
+            body += 'Thank you!<br/><br/>';
+            body += 'Cheers,<br/>';
+            body += 'Moses';
+            mail.setHtmlBody(body);
+
+            Messaging.EmailFileAttachment attach = new Messaging.EmailFileAttachment();
+
+            // Get Class List PDF
+            PageReference pref = page.AttendeesListSheet;
+            pref.getParameters().put('id',(String)classId.Id);
+            pref.setRedirect(true);
+
+            // Convert PDF to Blob
+            Blob b = pref.getContent();
+            attach.setFileName('Attendees List.pdf');
+            attach.setBody(b);
+
+            mail.setFileAttachments(new Messaging.EmailFileAttachment[]{attach});
+
+            mails.add(mail);
+        }
+        Messaging.sendEmail(mails);
+    }
+}
