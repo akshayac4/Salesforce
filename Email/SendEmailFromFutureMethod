@@ -18,18 +18,20 @@ public with sharing class ClassTriggerHandler {
         for(Class__c classId : ClassList){
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
 
-            // Step 2: Set list of people who should get the email
+            // SET LIST OF EMAIL TO WHICH EMAIL SHOULD BE SENT
             List<String> sendTo = new List<String>();
             sendTo.add(classId.Instructor_Trainer__r.Email);
             
             mail.setToAddresses(sendTo);
 
-            // Step 3: Set who the email is sent from
+            // SET EMAIL SENDER NAME
             mail.setSenderDisplayName('InterAktiv');
 
 
-            // Step 4. Set email contents - you can use variables!
+            // SET EMAIL SUBJECT
             mail.setSubject('DCCL + SgSL Level One Class '+ classId.Course_Id__r.Course_Name__c +' Via Online Confirmation!');
+
+            // SET EMAIL BODY
             String body = 'Hi ' + classId.Instructor_Trainer__r.FirstName + ', <br/><br/>';
             body += 'For your information below only, thank you.<br/>';
             body += 'Attached is your class attendance list with names and email addresses.<br/><br/>';
@@ -41,20 +43,25 @@ public with sharing class ClassTriggerHandler {
 
             Messaging.EmailFileAttachment attach = new Messaging.EmailFileAttachment();
 
-            // Get Class List PDF
+            // GET DOCUMENTS NEEDS TO BE ATTACHED
             PageReference pref = page.AttendeesListSheet;
+
+            // ASSIGN ANY URL PARAMETER USED FOR THE PAGE/PDF GENERATION
             pref.getParameters().put('id',(String)classId.Id);
             pref.setRedirect(true);
 
-            // Convert PDF to Blob
+            // CONVERT FILE TO BLOB
             Blob b = pref.getContent();
             attach.setFileName('Attendees List.pdf');
             attach.setBody(b);
 
             mail.setFileAttachments(new Messaging.EmailFileAttachment[]{attach});
 
+            // ADD EMAIL TO COLLCTION OF EMAILS        
             mails.add(mail);
         }
+        
+        // SEND EMAILS
         Messaging.sendEmail(mails);
     }
 }
