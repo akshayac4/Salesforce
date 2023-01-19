@@ -1,0 +1,51 @@
+<template>
+    <lightning-card title="Pagination" icon-name="custom:custom14">
+        <div class="slds-m-around_medium">
+            <p>Hello 👋</p>
+            <div class="slds-grid">
+                <div class="slds-col">
+                    <lightning-input label="Please search your First Name" value={SearchFirstName}
+                        onchange={searchFirstName}></lightning-input>
+                </div>
+                <div class="slds-col">
+                    <br/>
+                    <lightning-button icon-name="utility:search" variant="brand" label="Search" title="Search Record" value={SearchFirstName} onclick={searchRecord}
+                        class="slds-m-left_x-small"></lightning-button>
+                </div>
+                <div class="slds-col">
+                    <br/>
+                    <lightning-button icon-name="utility:save" variant="brand" label="Save" title="Save Record" onclick={saveRecord}
+                        class="slds-m-left_x-small"></lightning-button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-m-around_medium">
+            <template for:each={contacts} for:item="con" for:index="index">
+                <div class="slds-grid" key={con.label} style="width:100%;">
+                    <template for:each={con.value} for:item="val" for:index="index">
+                        <div class="col slds-box" key={val.label} >
+                            <lightning-input type="text" value={val.value} data-id={index} label={val.label} name={val.label}
+                                placeholder="Enter First Name" onchange={onNameChange}></lightning-input>
+                        </div>
+                    </template>
+                </div>
+                <!-- <div class="slds-grid" key={con.Id} style="width:100%;">
+                    <div class="col slds-box" style="width:33%;">
+                        <lightning-input type="text" value={con.FirstName} data-id={index} label="First Name" name="FirstName" placeholder="Enter First Name" onchange={onNameChange}></lightning-input>
+                    </div>
+                    <div class="col slds-box" style="width:33%;">
+                        <lightning-input type="text" value={con.LastName} data-id={index} label="Last Name" name="LastName" placeholder="Enter Last Name" onchange={onNameChange}></lightning-input>
+                    </div>
+                    <div class="col slds-box" style="width:33%;">
+                        <lightning-input type="text" value={con.Email} data-id={index} label="Email" name="Email" placeholder="Enter Last Name" onchange={onNameChange}></lightning-input>
+                    </div>
+                    <div class="col slds-box" style="width:33%;">
+                        <lightning-input type="text" value={con.Phone} data-id={index} label="Phone" name="Phone" placeholder="Enter Last Name" onchange={onNameChange}></lightning-input>
+                    </div>
+                    <div class="col slds-box" style="width:33%;">
+                    </div>
+                </div> -->
+            </template>
+        </div>
+    </lightning-card>
+</template>
