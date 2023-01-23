@@ -8,5 +8,5 @@ Please find my below code snippents in the repo.
 
 1. Trigger [ One Object one Trigger Rule. This is very basic for small project. ]
 2. Aura [Coming Soon]
-3. LWC [Coming Soon]
+3. LWC
 4. VF Page [Coming Soon]
