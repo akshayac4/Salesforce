@@ -14,7 +14,7 @@ public with sharing class PaginationController {
 
     @AuraEnabled
     public static void saveContact(List<Contact> listt){
-        update listt;
+        update listt;   
     }
 
     @AuraEnabled
