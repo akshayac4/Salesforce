@@ -1,0 +1,27 @@
+<template>
+    
+    <div class="slds-card slds-box">
+        {ObjectName} - {FieldName} 
+    </div>
+
+    <div class="slds-card slds-box" style="width: 100%;">
+        <template for:each={SObjectData} for:item="opp">
+            <div key={opp.Name} class="slds-grid slds-gutters">
+
+                <template for:each={opp.stageNameList} for:item="sn">
+                    <template if:true={sn.selected}>
+                        <div key={sn.StageName} class="slds-col slds-box" style="background: #46c65a; color:rgb(0, 0, 0); margin-left: 0.5%; margin-right: 0.5%;">
+                        <!-- <div class="slds-box" style="background: green; width: 10% !important;" > -->
+                            <b>{sn.StageName}</b>
+                        </div>
+                    </template>
+                    <template if:false={sn.selected}>
+                        <div key={sn.StageName} id={sn.StageName} class="slds-col slds-box" style=" margin-left: 0.5%; margin-right: 0.5%;" onclick={onClick}>
+                            {sn.StageName}
+                        </div>
+                    </template>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>
