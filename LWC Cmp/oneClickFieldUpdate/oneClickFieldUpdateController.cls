@@ -41,6 +41,31 @@ public with sharing class oneClickFieldUpdateController {
         return sObjWrapper;
     }
 
+
+    @AuraEnabled
+    public static void updateRecord(String FieldName,String FieldValue, String RecordId){
+         
+
+        Map<Id, String> idsToUpdate = new Map<Id, String>();
+
+        // Put the Id's and associated name values in the map
+
+        idsToUpdate.put(RecordId,FieldValue);
+
+        List<SObject> sObjectsToUpdate = new List<SObject>();
+
+        for (Id idToUpdate : idsToUpdate.keySet()) {
+            SObject o1 = idToUpdate.getSObjectType().newSObject(idToUpdate);
+            // Set the Name field dynamically
+            o1.put(FieldName, idsToUpdate.get(idToUpdate));
+            sObjectsToUpdate.add(o1);
+        }
+
+        update sObjectsToUpdate;
+
+
+    }
+
     @AuraEnabled
     public static List<stageNameWrapper> getStageName(String ObjectName, String FieldName){
         List<stageNameWrapper> pickValList = new List<stageNameWrapper>();
