@@ -11,9 +11,11 @@ export default class OneClickFieldUpdate extends LightningElement {
   @api FieldName;
 
   @track SObjectData;
+  @track isLoading;
 
   connectedCallback() {
     this.getDefault();
+    this.isLoading = true;
   }
 
   getDefault(event) {
@@ -24,6 +26,8 @@ export default class OneClickFieldUpdate extends LightningElement {
     }).then((data) => {
       console.log(data);
       this.SObjectData = data;
+      this.updateRecordView();
+      this.isLoading = false;
     });
   }
 
@@ -36,6 +40,12 @@ export default class OneClickFieldUpdate extends LightningElement {
     }).then((data) => {
       this.getDefault();
     });
+  }
+
+  updateRecordView() {
+    setTimeout(() => {
+      eval("$A.get('e.force:refreshView').fire();");
+    }, 1);
   }
 
   // Depricate
