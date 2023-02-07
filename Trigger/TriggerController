@@ -1,10 +1,10 @@
 public with sharing class QuestionTriggerController {
 
-    List<Question__c> recordNewList = new List<Question__c>();
-    List<Question__c> recordOldList = new List<Question__c>();
-    Map<Id, Question__c> recordNewMap = new Map<Id, Question__c>();
-    Map<Id, Question__c> recordOldMap = new Map<Id, Question__c>();
-    Boolean isInsert, isUpdate, isDelete, isUndelete = false;
+    public List<Question__c> recordNewList = new List<Question__c>();
+    public List<Question__c> recordOldList = new List<Question__c>();
+    public Map<Id, Question__c> recordNewMap = new Map<Id, Question__c>();
+    public Map<Id, Question__c> recordOldMap = new Map<Id, Question__c>();
+    public Boolean isInsert, isUpdate, isDelete, isUndelete = false;
     public static boolean recursionController = false;
     
     public QuestionTriggerController(List<Question__c> newList, List<Question__c> oldList, Map<Id, Question__c> newMap, Map<Id, Question__c> oldMap, boolean isInsert, boolean isUpdate, Boolean isDelete, Boolean isUndelete) {
