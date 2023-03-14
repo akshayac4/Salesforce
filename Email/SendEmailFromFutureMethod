@@ -14,6 +14,9 @@ public with sharing class ClassTriggerHandler {
 
         // List of email to be sent
         List<Messaging.SingleEmailMessage> mails = new List<Messaging.SingleEmailMessage>();
+        
+        // Record Activity
+        List<EmailMessage> emailMessageSet = new List<EmailMessage>();
 
         for(Class__c classId : ClassList){
             Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
