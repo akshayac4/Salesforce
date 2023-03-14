@@ -59,9 +59,23 @@ public with sharing class ClassTriggerHandler {
 
             // ADD EMAIL TO COLLCTION OF EMAILS        
             mails.add(mail);
+            
+            emailMessageSet.Add(new EmailMessage(
+                RelatedToId = classId.id,
+                MessageDate = Datetime.now(),
+                FromAddress = 'sadeaf@interaktiv.sg',
+                FromName = 'Sadeaf',
+                ToAddress = classId.Instructor_Trainer__r.Email,
+                Subject = 'Your SGSL Membership ID',
+                HtmlBody = body,
+                TextBody = ''
+            ));
         }
         
         // SEND EMAILS
         Messaging.sendEmail(mails);
+        
+        // Record Activity
+        Database.SaveResult[] saveResults = Database.insert(emailMessageSet, false);
     }
 }
