@@ -71,6 +71,7 @@ public with sharing class ClassTriggerHandler {
                 ToAddress = classId.Instructor_Trainer__r.Email,
                 Subject = 'Your SGSL Membership ID',
                 HtmlBody = body,
+                Status = '3', // 3 = Sent
                 TextBody = ''
             ));
         }
