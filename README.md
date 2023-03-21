@@ -10,3 +10,6 @@ Please find my below code snippents in the repo.
 2. Aura
 3. LWC
 4. VF Page [Coming Soon]
+
+
+NOTE: Create a PR if you think there can be an improvement in the code. I will surely check and merge the details.
