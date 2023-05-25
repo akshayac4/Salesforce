@@ -66,4 +66,14 @@ public with sharing class QuestionTriggerController {
             update sectionList;
         }
     }
+    
+    // APPROVAL PROCESS
+    public void SendForApproval(){
+        for(Disbursements__c dis : recordNewList){
+            Approval.ProcessSubmitRequest approvalRequest = new Approval.ProcessSubmitRequest();
+            approvalRequest.setComments('Test Approval');
+            approvalRequest.setObjectId(dis.KeystartID__c);
+            Approval.ProcessResult approvalResult = Approval.process(approvalRequest);
+        }
+    }
 }
